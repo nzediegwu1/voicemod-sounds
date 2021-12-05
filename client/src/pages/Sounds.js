@@ -31,13 +31,11 @@ function SoundsPage() {
                   >
                     <Row>
                       {response.map((sound) => (
-                        <Link to={`/sounds/${sound._id}`}>
-                          <SoundCard
-                            key={sound._id}
-                            sound={sound}
-                            type="list"
-                          />
-                        </Link>
+                        <div className="col-sm-6 col-lg-4">
+                          <Link to={`/sounds/${sound._id}`}>
+                            <SoundCard key={sound._id} sound={sound} />
+                          </Link>
+                        </div>
                       ))}
                     </Row>
                     {errors.length

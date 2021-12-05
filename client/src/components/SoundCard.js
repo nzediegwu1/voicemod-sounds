@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Alert, Button } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import styled from 'styled-components';
-import { errorHandler, formatNumber, makeRequest } from '../helpers';
+import { errorHandler, makeRequest } from '../helpers';
+import { Details } from '.';
 
 /**
  * @description Displays information about a sound
@@ -10,7 +11,7 @@ import { errorHandler, formatNumber, makeRequest } from '../helpers';
  * @param {Object} { sound }
  * @returns {React.Component} React Component
  */
-const SoundCard = ({ sound, type }) => {
+const SoundCard = ({ sound }) => {
   const [state, setState] = useState({
     loading: false,
     errors: [],
@@ -30,7 +31,7 @@ const SoundCard = ({ sound, type }) => {
   const { errors, loading } = state;
 
   return (
-    <Wrapper id={sound?._id} className={type && 'col-sm-6 col-lg-4'}>
+    <Wrapper id={sound?._id}>
       <Card>
         {errors.length ? (
           <Alert
@@ -48,22 +49,7 @@ const SoundCard = ({ sound, type }) => {
           <b>{sound?.name?.toUpperCase()}</b>
         </div>
         {Object.keys(sound).length > 3 && (
-          <div>
-            <p>
-              <b>Playbacks</b>: {formatNumber(sound.playbacks)}
-            </p>
-            <p>
-              <b>Price</b>: ${formatNumber(sound.price)}
-            </p>
-            <Button
-              disabled={loading}
-              onClick={handlePlay}
-              style={{ float: 'right' }}
-              variant="primary"
-            >
-              Play
-            </Button>
-          </div>
+          <Details loading={loading} handlePlay={handlePlay} sound={sound} />
         )}
       </Card>
     </Wrapper>
