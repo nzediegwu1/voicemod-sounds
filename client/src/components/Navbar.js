@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Form, FormControl } from 'react-bootstrap';
 import { logo } from '../images';
-import { useRequest } from '../helpers';
+import { errorHandler, useRequest } from '../helpers';
 
 /**
  * @description Renders a sticky bootstrap navbar
@@ -31,15 +31,8 @@ const NavBar = ({ children }) => {
           ...res,
         });
       })
-      .catch(({ response, message }) => {
-        if (response) {
-          return setState((prev) => ({
-            ...prev,
-            errors: response.data.errors,
-            loading: false,
-          }));
-        }
-        setState((prev) => ({ ...prev, errors: [message], loading: false }));
+      .catch((error) => {
+        errorHandler(error, setState);
       });
   };
 

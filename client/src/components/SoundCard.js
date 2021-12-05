@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Alert, Button } from 'react-bootstrap';
 import styled from 'styled-components';
+import { errorHandler, formatNumber, makeRequest } from '../helpers';
 
 /**
  * @description Displays information about a sound
@@ -7,14 +10,61 @@ import styled from 'styled-components';
  * @param {Object} { sound }
  * @returns {React.Component} React Component
  */
-const SoundCard = ({ sound }) => {
+const SoundCard = ({ sound, type }) => {
+  const [state, setState] = useState({
+    loading: false,
+    errors: [],
+  });
+  const location = useLocation();
+
+  const handlePlay = async () => {
+    setState((prev) => ({ ...prev, loading: true }));
+    try {
+      await makeRequest({ path: `${location.pathname}/play`, method: 'put' });
+      setState((prev) => ({ ...prev, loading: false }));
+    } catch (error) {
+      errorHandler(error, setState);
+    }
+  };
+
+  const { errors, loading } = state;
+
   return (
-    <Wrapper id={sound._id} className="col-sm-6 col-lg-4">
-      <Card className="text-center">
+    <Wrapper id={sound?._id} className={type && 'col-sm-6 col-lg-4'}>
+      <Card>
+        {errors.length ? (
+          <Alert
+            variant="danger"
+            onClose={() => setState((prev) => ({ ...prev, errors: [] }))}
+            dismissible
+          >
+            <b>{errors.toString()}</b>
+          </Alert>
+        ) : null}
         <div>
-          <img src={sound.icon} alt={sound.name} />
+          <img src={sound?.icon} alt={sound?.name || 'voice'} />
         </div>
-        <b>{sound.name.toUpperCase()}</b>
+        <div className="text-center">
+          <b>{sound?.name?.toUpperCase()}</b>
+        </div>
+        {Object.keys(sound).length > 3 && (
+          <div>
+            <p>
+              <b>Playbacks</b>: {formatNumber(sound.playbacks)}
+            </p>
+            <p>
+              <b>Price</b>: ${formatNumber(sound.price)}
+            </p>
+            <Button
+              disabled={loading}
+              onClick={handlePlay}
+              style={{ float: 'right' }}
+              variant="primary"
+            >
+              Play
+            </Button>
+          </div>
+        )}
       </Card>
     </Wrapper>
   );

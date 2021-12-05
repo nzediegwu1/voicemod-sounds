@@ -18,7 +18,7 @@ const useRequest = () => {
    */
   const fetchData = async ({ page }) => {
     setState({ ...state, loading: true });
-    const link = `${baseUrl}?page=${page}&limit=6`;
+    const link = `${baseUrl}/sounds?page=${page}&limit=6`;
     const {
       data: { data },
     } = await axios.get(link);
@@ -33,6 +33,11 @@ const useRequest = () => {
     };
   };
   return [state, fetchData];
+};
+
+export const makeRequest = async ({ path, method = 'get', payload = {} }) => {
+  const { data } = await axios[method](baseUrl + path, payload);
+  return data.data;
 };
 
 export default useRequest;
