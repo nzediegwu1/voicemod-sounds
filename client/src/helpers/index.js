@@ -1,2 +1,2 @@
-export { default as useRequest } from './useRequest';
-export { default as formatNumber } from './formatNumber';
+export { default as useRequest, makeRequest } from './useRequest';
+export { formatNumber, errorHandler } from './utils';

@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Alert } from 'react-bootstrap';
 import styled from 'styled-components';
+import { errorHandler, makeRequest } from '../helpers';
+import { Details } from '.';
 
 /**
  * @description Displays information about a sound
@@ -8,13 +12,45 @@ import styled from 'styled-components';
  * @returns {React.Component} React Component
  */
 const SoundCard = ({ sound }) => {
+  const [state, setState] = useState({
+    loading: false,
+    errors: [],
+  });
+  const location = useLocation();
+
+  const handlePlay = async () => {
+    setState((prev) => ({ ...prev, loading: true }));
+    try {
+      await makeRequest({ path: `${location.pathname}/play`, method: 'put' });
+      setState((prev) => ({ ...prev, loading: false }));
+    } catch (error) {
+      errorHandler(error, setState);
+    }
+  };
+
+  const { errors, loading } = state;
+
   return (
-    <Wrapper id={sound._id} className="col-sm-6 col-lg-4">
-      <Card className="text-center">
+    <Wrapper id={sound?._id}>
+      <Card>
+        {errors.length ? (
+          <Alert
+            variant="danger"
+            onClose={() => setState((prev) => ({ ...prev, errors: [] }))}
+            dismissible
+          >
+            <b>{errors.toString()}</b>
+          </Alert>
+        ) : null}
         <div>
-          <img src={sound.icon} alt={sound.name} />
+          <img src={sound?.icon} alt={sound?.name || 'voice'} />
         </div>
-        <b>{sound.name.toUpperCase()}</b>
+        <div className="text-center">
+          <b>{sound?.name?.toUpperCase()}</b>
+        </div>
+        {Object.keys(sound).length > 3 && (
+          <Details loading={loading} handlePlay={handlePlay} sound={sound} />
+        )}
       </Card>
     </Wrapper>
   );
