@@ -23,13 +23,14 @@ export class SoundController {
   @ResolveHttp
   async getAll(req) {
     const { page = 1, limit = 10 } = req.query;
+    const skip = (+page - 1) * +limit;
 
     const [result] = await this.soundModel.aggregate([
       {
         $facet: {
           total: [{ $count: 'count' }],
           data: [
-            { $skip: (+page - 1) * +limit },
+            { $skip: skip },
             { $limit: +limit },
             { $project: { _id: 1, name: 1, icon: 1 } },
           ],
@@ -38,10 +39,13 @@ export class SoundController {
     ]);
 
     const { total, data } = result;
+
+    const count = total[0]?.count || 0;
+    const hasMore = skip + data.length < count;
     return {
       message: sound.fetched,
       data: {
-        total: total[0]?.count || 0,
+        hasMore,
         data,
       },
     };
