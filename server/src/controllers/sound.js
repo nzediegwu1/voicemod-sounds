@@ -1,6 +1,6 @@
 import { existsOr404, ResolveHttp } from '../utils/http';
 import { sound } from '../messages/success';
-import { sound as error } from '../messages/error';
+import { soundError } from '../messages/error';
 
 export class SoundController {
   constructor(soundModel) {
@@ -16,7 +16,7 @@ export class SoundController {
     const { soundId } = req.params;
 
     const data = await this.soundModel.findOne({ _id: soundId }).select('-__v');
-    existsOr404(data, error[404]);
+    existsOr404(data, soundError[404]);
     return { message: sound.retrieved, data };
   }
 
@@ -72,7 +72,7 @@ export class SoundController {
         },
       }
     );
-    existsOr404(data, error[404]);
+    existsOr404(data, soundError[404]);
     return { code: 204 };
   }
 }
