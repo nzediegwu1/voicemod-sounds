@@ -25,7 +25,7 @@ function Details({ sound, handlePlay, loading }) {
             <b>Price</b>
           </div>
           <Badge variant="primary" pill>
-            ${formatNumber(sound.price)}
+            €{formatNumber(sound.price.toFixed(2))}
           </Badge>
         </ListGroup.Item>
       </ListGroup>

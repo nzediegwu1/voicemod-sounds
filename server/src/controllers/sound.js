@@ -67,9 +67,7 @@ export class SoundController {
     const data = await this.soundModel.findOneAndUpdate(
       { _id: soundId },
       {
-        $inc: {
-          playbacks: 1,
-        },
+        $inc: { playbacks: 1, price: 0.01 },
       }
     );
     existsOr404(data, soundError[404]);

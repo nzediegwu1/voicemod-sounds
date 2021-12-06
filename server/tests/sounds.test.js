@@ -67,9 +67,9 @@ describe('Test for PUT: /sounds/:soundId/play endpoint', () => {
     expect(response.statusCode).toBe(204);
   });
 
-  it('Should increment playbacks after playing sound', async () => {
+  it('Should increment price by 0.01 after playing a sound', async () => {
     const response = await request(app).get(`/sounds/${soundDetails._id}`);
 
-    expect(response.body.data.playbacks - soundDetails.playbacks).toBe(1);
+    expect(response.body.data.price - soundDetails.price).toBe(0.01);
   });
 });
