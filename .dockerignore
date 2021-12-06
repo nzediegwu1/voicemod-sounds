@@ -1,0 +1,6 @@
+node_modules
+npm-debug.log
+dist
+LICENCE
+README.md
+.env.sample
