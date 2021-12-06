@@ -1,7 +1,7 @@
 export const success = {
   message: 'Successfully fetched your sounds',
   data: {
-    total: 4,
+    hasMore: true,
     data: [
       {
         _id: '61ac055cb2b08953083f1aef',

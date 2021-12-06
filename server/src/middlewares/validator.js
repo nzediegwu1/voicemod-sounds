@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { check, validationResult } from 'express-validator/check';
+import { soundError } from '../messages/error';
 
 const getErrors = (req, next) => {
   const errors = validationResult(req)
@@ -19,5 +20,5 @@ export const handleValidation = async (req, res, next) => {
 };
 
 export const validateId = [
-  check('soundId').trim().isMongoId().withMessage('soundId parameter is invalid'),
+  check('soundId').trim().isMongoId().withMessage(soundError.invalidSoundId),
 ];
